@@ -12,7 +12,7 @@
         
           <div class="apiForm saveGroup">
               <label for="">name : </label><input type="text" name="namesaveGroup" id="namesaveGroup" value="Asso1" /><br/>
-              <label for="">email* :</label> <input type="text" name="emailsaveGroup" id="emailsaveGroup" value="<?php echo $this::$moduleKey?>@<?php echo $this::$moduleKey?>.com" /> (personne physique responsable )<br/>
+              <label for="">email* :</label> <input type="text" name="emailsaveGroup" id="emailsaveGroup" value="<?php echo strtolower($this::$moduleKey)?>@<?php echo strtolower($this::$moduleKey)?>.com" /> (personne physique responsable )<br/>
               <label for="">cp* : </label><input type="text" name="postalcodesaveGroup" id="postalcodesaveGroup" value="97421" /><br/>
               <label for="">tags : </label><input type="text" name="tagssaveGroup" id="tagssaveGroup" value="" placeholder="ex:social,solidaire...etc"/><br/>
               <label for="">type : </label><select name="typesaveGroup" id="typesaveGroup" onchange="typeChanged()">
@@ -45,10 +45,6 @@ initT['newGroupModalsInit'] = function(){
       two = getRandomInt(0,10);
       if( prompt("combien font "+one+"+"+two+" ?") == one+two ){
         $("#newGroupForm").modal('hide');
-        //toggleSpinner();
-        var hashtagList = getHashTagList( $("#message").val() );
-        log(hashtagList.hashtags);
-        //log(hashtagList.people);
 
         params = { "email" : $("#emailsaveGroup").val() , 
                      "name" : $("#namesaveGroup").val() , 

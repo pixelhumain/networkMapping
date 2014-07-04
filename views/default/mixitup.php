@@ -1,7 +1,7 @@
 <?php 
 $cs = Yii::app()->getClientScript();
-$cs->registerCssFile($this->module->assetsUrl. '/css/mixitup/reset.css');
-$cs->registerCssFile($this->module->assetsUrl. '/css/mixitup/style.css');
+$cs->registerCssFile($this->module->assetsUrl. '/mixitup/reset.css');
+$cs->registerCssFile($this->module->assetsUrl. '/mixitup/style.css');
 //$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/api.js' , CClientScript::POS_END);
 $this->pageTitle=$this::moduleTitle;
 ?>
@@ -32,7 +32,7 @@ $this->pageTitle=$this::moduleTitle;
         {
           if(!in_array($t, $alltags)){
             array_push($alltags, $t);
-            $tagBlock .= '<button class="filter" data-filter=".'.$t.'">'.$t.'</button>';
+            $tagBlock .= ' <button class="filter" data-filter=".'.$t.'">'.$t.'</button>';
           }
           $tags .= $t.' ';
         }
@@ -46,7 +46,7 @@ $this->pageTitle=$this::moduleTitle;
   <button class="sort" data-sort="myorder:asc">Asc</button>
   <button class="sort" data-sort="myorder:desc">Desc</button>
 </div>
-<div id="Container" class="container">
+<div id="mixcontainer" class="mixcontainer">
   
   <?php echo $blocks?>
 
@@ -59,6 +59,6 @@ $this->pageTitle=$this::moduleTitle;
 <script type="text/javascript">
   
   $(function(){
-  $('#Container').mixItUp();
+  $('#mixcontainer').mixItUp();
 });
 </script>

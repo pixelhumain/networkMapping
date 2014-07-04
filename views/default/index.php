@@ -150,47 +150,6 @@ $this->pageTitle=$this::moduleTitle;
       <br>
     </div>
 
-    
-    <div class="step newDate hidden" >
-      <div class="fr">
-        <img src="<?php echo Yii::app()->theme->baseUrl;?>/img/bdb.png" style="width:120px;float:right;">
-        <?php $this->renderPartial( "tools" ); ?>
-      </div>
-      <div class="stepTitle">Ajouter une Date à l'agenda ?</div>
-      <div class="apiForm addEvent">
-      <label for="nameaddEvent">name : </label><input type="text" name="nameaddEvent" id="nameaddEvent" value="Asso1" /><br/>
-      <label for="">email* : </label><input type="text" name="emailaddEvent" id="emailaddEvent" value="<?php echo $this::$moduleKey?>@<?php echo $this::$moduleKey?>.com" /> (personne physique responsable )<br/>
-      <label for="">when : </label><input type="text" name="whenaddEvent" id="whenaddEvent" value="" /><br/>
-      <label for="">where : </label><input  type="text" name="whereaddEvent" id="whereaddEvent" value="" /><br/>
-      <label for="">cp* : </label><input type="text" name="postalcodeaddEvent" id="postalcodeaddEvent" value="97421" /><br/>
-      <label for="">phoneNumber : </label><input type="text" name="phoneNumberaddEvent" id="phoneNumberaddEvent" value="1234" />(for SMS)<br/>
-      <label for="">tags : </label><input type="text" name="tagsaddEvent" id="tagsaddEvent" value="" placeholder="ex:social,solidaire...etc"/><br/>
-      <label for="">participant : </label><input  type="text" name="whoaddEvent" id="whoaddEvent" value="5370b477f6b95c280a00390c" /><br/>
-      <br/>
-      <a class="btn" href="javascript:addEvent()">ENREGISTRER</a><br/>
-      <div id="addEventResult" class="result fss"></div>
-      <script>
-        function addEvent(){
-          params = { "email" : $("#emailaddEvent").val() , 
-                   "name" : $("#nameaddEvent").val() , 
-                   "cp" : $("#postalcodeaddEvent").val() , 
-                   "pwd" : $("#pwdaddEvent").val(),
-                   "type" : "event",
-                   "phoneNumber" : $("#phoneNumberaddEvent").val(),
-                   "tags" : $("#tagsaddEvent").val(),
-                   "app":"<?php echo $this::$moduleKey?>",
-                   "when":$("#whenaddEvent").val(),
-                   "where":$("#whereaddEvent").val(),
-                   "group":$("#whoaddEvent").val()
-                };
-          testitpost("addEventResult", baseUrl+'/<?php echo $this::$moduleKey?>/api/saveGroup',params);
-        }
-        
-      </script>
-    </div>
-      
-    </div>
-
     <div class="step newMessage hidden" >
       <div class="fr">
         <img src="<?php echo Yii::app()->theme->baseUrl;?>/img/bdb.png" style="width:120px;float:right;">
@@ -364,14 +323,16 @@ var items = new vis.DataSet([
     echo "nodes.push({id: '$key', label: '$name \\n $email',color: 'beige'});";
     echo "edges.push({from: 1, to: '$key'});";
 
-    $people = Citoyen::getPeopleBy(array("groupname"=>$name,"fields"=>array("email",'name')));
+    if( isset( $_GET['people'] ))
+      {
+    $people = Citoyen::getPeopleBy(array("groupid"=>$value["_id"],"fields"=>array("email",'name')));
     foreach ($people as $key2 => $value2) 
     {
       $name2 = ( isset($value2["name"]) ) ? $value2["name"] : "";  
       $email2 = $value2["email"];
-      if( isset( $_GET['people'] )){
-        echo "nodes.push({id: '$key2-$key', label: '$name2 \\n $email2'});";
-        echo "edges.push({from: '$key', to: '$key2-$key'});";
+      
+      echo "nodes.push({id: '$key2-$key', label: '".$name2." \\n ".$email2."'});";
+      echo "edges.push({from: '".$key."', to: '".$key2."-".$key."'});";
       }
     }
   }
@@ -394,50 +355,17 @@ var items = new vis.DataSet([
       } else
         $filtre = $t;
       
-      $tagHTML = " <a class='tag $t $onoff ' href='/ph/egpc?tags=$filtre'>$t</a>";
-      echo "$('.tags').append(\"$tagHTML\");";
+      $tagHTML = " <a class='tag ".$t." ".$onoff." ' href='/ph/".$this::$moduleKey."?tags=".$filtre."'>$t</a>";
+      echo "$('.tags').append(\"".$tagHTML."\");";
   }
   $onoff = ( isset( $_GET['tags'] )) ? "off" : "";
-  $tagHTML = " <a class='tag $onoff' href='/ph/egpc'>Tous</a>";
+  $tagHTML = " <a class='tag $onoff' href='".$this::$moduleKey."'>Tous</a>";
   echo "$('.tags').append(\"$tagHTML\");";
   ?>
   drawGraph();
 
 });
 
-function getGroups(filterTag)
-{
-  console.log("getGroups",filterTag);
-  var params = {"app":"<?php echo $this::$moduleKey?>"};
-  testitpost("info", baseUrl+'/<?php echo $this::$moduleKey?>/api/getgroupsby/fields/email,name,tags',params,
-            function(data)
-            {
-              $.each(data,function(k,v)
-              {
-                //console.log(k, v.name,v.tags);
-                //build nodes for the graph
-                nodes.push({id: k, label: v.name+"\n"+v.email,color: 'beige'});  
-                edges.push({from: 1, to: k});
-
-                //get people for each sub contents
-                testitpost("info", baseUrl+'/<?php echo $this::$moduleKey?>/api/getpeopleby/fields/email,name',{"groupname":v.name},
-                                function(data)
-                                { 
-                                  $.each(data,function(kk,vv){
-                                    console.log(kk, vv.name);
-                                    nodes.push({id: kk+"-"+k, label: vv.name+"\n"+vv.email, value:8});  
-                                    edges.push({from: k, to: kk+"-"+k});
-                                  })
-                                  drawGraph();
-                                });
-              });
-
-              drawGraph();
-              <?php if( isset( $_GET['tags'] ) ){?>
-              filterByTag("<?php echo $_GET['tags']?>");
-              <?php } ?>
-            });
-}
 
 function filterByTag(tag)
 {
@@ -486,4 +414,5 @@ function getMessages(){
 </script>
 <?php
 $this->renderPartial(Yii::app()->params["modulePath"].$this->module->id.'.views.default.modals.newGroup');
+$this->renderPartial(Yii::app()->params["modulePath"].$this->module->id.'.views.default.modals.newDate');
 ?>

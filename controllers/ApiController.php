@@ -26,6 +26,7 @@ class ApiController extends Controller {
         array_push($groupMap["children"], Api::$apis["confirmUserRegistration"]);
         array_push($groupMap["children"], Api::$apis["linkUser2Group"]);
         array_push($this->sidebar1, $groupMap);
+        array_push($this->sidebar1, Api::getAdminPHMap());
 
         return Api::buildActionMap($this->sidebar1);
     }

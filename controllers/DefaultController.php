@@ -20,7 +20,7 @@ class DefaultController extends Controller {
       array('label' => "Quand", "key"=>"when","href"=>"javascript:;","onclick"=>"hideShow('.when')"),
       array('label' => "Pourquoi", "key"=>"why","href"=>"javascript:;","onclick"=>"hideShow('.why')"),
       array('label' => "Quoi", "key"=>"what","href"=>"javascript:;","onclick"=>"hideShow('.what')"),
-      array('label' => "Mixitup", "key"=>"how","href"=>"egpc?tpl=mixitup"),
+      array('label' => "Mixitup", "key"=>"how","href"=>"?tpl=mixitup"),
     );
 
     protected function beforeAction($action)
@@ -61,9 +61,9 @@ class DefaultController extends Controller {
         {
           foreach ( $value["tags"] as $t ) 
           {
-            if(!in_array($t, $alltags))
+            if(!in_array($t, $alltags) && $t!="")
             {
-              array_push($alltags, $t);
+              array_push($alltags,$t);
             }
           }
         }
