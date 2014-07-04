@@ -1,0 +1,38 @@
+{
+	"name": "egpc/modules",
+	"description": "EGPC modules",
+	"keywords": ["EGPC"],
+	"type": "package",
+	"license": "creative commons",
+	"authors": [
+		{
+			"name": "Tibor Katelbach",
+			"email": "oceatoon@gmail.com",
+			"homepage": "http://oceatoon.org//"
+		},
+		{
+			"name": "Sylvain Barbot",
+			"email": "sylvain.barbot@gmail.com"
+		}
+	],
+	"repositories": [
+		{
+		    "type": "composer",
+		    "url": "http://packages.phundament.com"
+		},
+		{
+            "type": "vcs",
+            "url": "https://github.com/pixelhumain/citizen-toolkit"
+        }
+	],
+	"require": {
+		"composer/installers": "~1.0",
+		"pixelhumain/citizen-toolkit": "*"
+	},
+	"extra":{
+    	"installer-paths":{
+      		"ctk/": ["pixelhumain/CitizenToolKit"]
+    	}
+  	},
+    "minimum-stability": "dev"
+}
